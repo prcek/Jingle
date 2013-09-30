@@ -1,9 +1,9 @@
 ######### CFG  #########
 
-DEVICE     = atmega168
-AVRDUDE_PROGRAMMER = arduino
+DEVICE     = attiny85
+AVRDUDE_PROGRAMMER = avrisp
 AVRDUDE_BAUD = 19200
-CLOCK      = 16000000
+CLOCK      = 1000000
 
 USB_PORT=/dev/tty.usbserial-FTTG8GP4
 
@@ -23,7 +23,7 @@ OBJECTS=$(SOURCES:.c=.o)
 all:	$(TARGET).hex
 
 $(TARGET).hex: $(TARGET).elf
-	rm $(TARGET).hex
+	rm -f $(TARGET).hex
 	avr-objcopy -j .text -j .data -O ihex $(TARGET).elf $(TARGET).hex
 	avr-size --format=avr --mcu=$(DEVICE) $(TARGET).elf
 
@@ -38,10 +38,14 @@ clean:
 	rm -f $(TARGET).hex $(TARGET).elf $(OBJECTS)
 
 flash:
-	$(HUP)
-	$(AVRDUDE) -D -U flash:w:$(TARGET).hex:a
+	#$(HUP)
+	$(AVRDUDE)   -U flash:w:$(TARGET).hex:a
 
 reset:
 	$(HUP)
 
+dude:
+	$(AVRDUDE) -t
+cpp:
+	$(COMPILE) -E main.c
 
