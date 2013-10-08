@@ -8,7 +8,7 @@ CLOCK      = 1000000
 USB_PORT=/dev/tty.usbserial-FTTG8GP4
 
 
-SOURCES = main.c
+SOURCES = spk.c led.c main.c 
 ########################
 
 
