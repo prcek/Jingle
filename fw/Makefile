@@ -15,7 +15,7 @@ SOURCES = main.c
 STTY=stty -f $(USB_PORT)
 HUP=$(STTY) hupcl
 AVRDUDE=avrdude -v -p $(DEVICE) -P $(USB_PORT) -c $(AVRDUDE_PROGRAMMER) -b $(AVRDUDE_BAUD)
-COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
+COMPILE = avr-gcc -std=c99 -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 TARGET=fw
 OBJECTS=$(SOURCES:.c=.o)
 
