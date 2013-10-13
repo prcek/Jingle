@@ -21,6 +21,17 @@ void delay_us(long d) {
 
 
 
+void spk_beep(long ms) {
+	ms = (ms * 440) / 1000;
+ 	 for (long i=0; i < ms; i++){ 
+  	 	SPK_ON;
+		_delay_us(1136);
+   		SPK_OFF;
+		_delay_us(1136);
+ 	 }
+ 
+}
+
 void spk_buzz(long frequency, long length) {
 
 
@@ -44,10 +55,6 @@ void spk_setup() {
 	SPK_SETUP;
 }
 
-
-void spk_beep() {
-	spk_buzz(1000,10);
-}
 
 
 #include "melody_bond.h"

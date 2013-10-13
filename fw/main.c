@@ -2,6 +2,7 @@
 #include <avr/sleep.h>
 #include <util/delay.h>
 #include <avr/power.h>
+#include <avr/interrupt.h>
 
 #include "led.h"
 #include "spk.h"
@@ -18,43 +19,59 @@ void power_setup() {
 }
 
 void sleep() {
+	sei();
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 	sleep_enable();
 	sleep_cpu();
 	sleep_disable();
+	cli();
 }
 
+void init_interupts() {
+	GIMSK |= _BV(PCIE);
+	PCMSK |= _BV(BUZ) | _BV(BTN);
+}
+
+ISR(PCINT0_vect) {
+}
 
 int main(void)
 {
 
 	led_setup();
-	led_flash(5);
+	led_flash(1);
 
 
 
 
 	spk_setup();
 
+
 	BTN_SETUP;
 	BUZ_SETUP;
+
+		
+	init_interupts();
 
 	power_setup();
 
     for(;;){
     	led_fadein();
-		led_fadeout();
-        if (! BTN_READ ) {
-			led_flash(2);
-			spk_play();
-    		led_flash(2);
+	_delay_ms(100);
+	led_fadeout();
+ 	sleep();
+        while (! BTN_READ ) {
+		led_on();
+		spk_beep(200);
+		_delay_ms(100);
+		led_off();
         }	
-        if (! BUZ_READ ) {
-			led_on();
-			spk_play();
-			led_fadeout();
+        while (! BUZ_READ ) {
+		led_on();
+		spk_beep(200);
+		_delay_ms(100);
+		led_on();
         }	
- 		sleep();
 
     }
     return 0;   /* never reached */
